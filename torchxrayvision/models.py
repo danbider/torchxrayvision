@@ -1,5 +1,4 @@
 from collections import OrderedDict
-print('test our import locally')
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -175,7 +174,9 @@ class DenseNet(nn.Module):
         
         if hasattr(self,"op_threshs") and (self.op_threshs != None):
             out = torch.sigmoid(out)
-            out = op_norm(out, self.op_threshs)
+            out = op_norm(out, torch.tensor(np.asarray(self.op_threshs), 
+                              dtype = torch.float).unsqueeze(0).expand(
+                                  out.shape[0],out.shape[1]).to(out.device))
         return out
 
 def op_norm(outputs, op_threshs):
