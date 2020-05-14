@@ -1,5 +1,5 @@
 from collections import OrderedDict
-
+print('test our import locally')
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
