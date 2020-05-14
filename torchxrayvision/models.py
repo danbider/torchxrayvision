@@ -179,16 +179,24 @@ class DenseNet(nn.Module):
                                   out.shape[0],out.shape[1]).to(out.device))
         return out
 
-def op_norm(outputs, op_threshs):
-    outputs_new = torch.zeros(outputs.shape, device=outputs.device)
-    for i in range(len(outputs)):
-        for t in range(len(outputs[0])):
-            if (outputs[i,t]<op_threshs[t]):
-                outputs_new[i,t] = outputs[i,t]/(op_threshs[t]*2) 
-            else:
-                outputs_new[i,t] = 1-((1-outputs[i,t])/((1-(op_threshs[t]))*2)) 
-            
+def op_norm(outputs, op_threshs_arr):
+    outputs_new = torch.zeros(outputs.shape, device = outputs.device)
+    mask_leq = outputs<op_threshs_arr
+    outputs_new[mask_leq] = outputs[mask_leq]/(op_threshs_arr[mask_leq]*2)
+    outputs_new[~mask_leq] = 1.0 - ((1.0 - outputs[~mask_leq])/((1-op_threshs_arr[~mask_leq])*2))
+    
     return outputs_new
+
+# def op_norm(outputs, op_threshs):
+#     outputs_new = torch.zeros(outputs.shape, device=outputs.device)
+#     for i in range(len(outputs)):
+#         for t in range(len(outputs[0])):
+#             if (outputs[i,t]<op_threshs[t]):
+#                 outputs_new[i,t] = outputs[i,t]/(op_threshs[t]*2) 
+#             else:
+#                 outputs_new[i,t] = 1-((1-outputs[i,t])/((1-(op_threshs[t]))*2)) 
+            
+#     return outputs_new
 
     
 def get_densenet_params(arch):
