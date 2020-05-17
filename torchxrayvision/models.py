@@ -183,6 +183,13 @@ class DenseNet(nn.Module):
         return out
 
 def op_norm(outputs, op_threshs_arr):
+    """normalize outputs according to operating points for a given model.
+    Args: 
+        outputs: outputs of self.classifier(). torch.Size(batch_size, 16) 
+        op_threshs_arr: torch.Size(batch_size, 16) with self.op_threshs expanded.
+    Returns:
+        outputs_new: normalized outputs, torch.Size(batch_size, 16)
+    """
     outputs_new = torch.zeros(outputs.shape, device = outputs.device)
     mask_leq = outputs<op_threshs_arr
     outputs_new[mask_leq] = outputs[mask_leq]/(op_threshs_arr[mask_leq]*2)
