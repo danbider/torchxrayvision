@@ -303,6 +303,7 @@ class Kaggle_Dataset(Dataset):
     JPG files stored here:
     https://academictorrents.com/details/95588a735c9ae4d123f3ca408e56570409bcf2a9
     """
+    print('test import from DB repo')
     def __init__(self, 
                  imgpath, 
                  csvpath=os.path.join(thispath, "kaggle_stage_2_train_labels.csv.zip"),
